@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "ether": "^0.0.9",
     "hardhat": "^2.22.19",
     "next": "15.2.3",
