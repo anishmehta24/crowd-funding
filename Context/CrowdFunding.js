@@ -52,4 +52,48 @@ export const CrowdFundingProvider = ({children}) => {
         }));
         return parsedCamapiagns;
     }
+
+    const getUserCampaigns = async () => {
+        const provider = new ethers.providers.JsonRpcProvider();
+        const contract = fetchContract(provider);
+
+        const allCampaigns = await contract.getCampaigns();
+        const accounts = await window.ethereum.request({ 
+            method: 'eth_accounts',
+
+        });
+        const currentUser = accounts[0];
+        const filteredCampaigns = allCampaigns.filter((campaign) => campaign.owner === "0x5FbDB2315678afecb367f032d93F642f64180aa3");
+
+        const userData = filteredCampaigns.map((campaign,i) => ({
+            owner: campaign.owner,
+            title: campaign.title,
+            description: campaign.description,
+            target: ethers.utils.formatEther(campaign.target.toString()),
+            deadline: campaign.deadline.toNumber(),
+            amountCollected:ethers.utils.formatEther(
+                campaign.amountCollected.toString()
+            ),
+            pId:i,
+        }))
+        return userData
+    }
+
+    const donate = async(pId,amount) => {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const signer = provider.getSigner();
+        const contract = fetchContract(signer);
+
+        const campaignData = await contract.getCampaign(pId,{
+            value:ethers.utils.parseEther(amount),
+
+        });
+
+        await campaignData.wait();
+        location.reload();
+        return campaignData;
+
+    }
 }
