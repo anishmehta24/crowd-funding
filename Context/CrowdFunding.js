@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 
@@ -113,4 +113,43 @@ export const CrowdFundingProvider = ({children}) => {
 
         return parsedDonations
     }
+
+    //-----CHECK IF WALLET IS CONNECTED
+    const checkIfWalletConnected = async () => {
+        try{
+            if(!window.ethereum)
+                return setOpenError(true) ,setError("Install Metamask");
+            const accounts = await window.ethereum.request({method: "eth_accounts"});
+            if(accounts.length) {
+                setCurrentAccount(accounts[0]);
+            }
+            else {
+               console.log("No accounts found")
+            }
+
+        } catch(error) {
+            console.log("Error connecting to metamask",error);
+        }
+    } 
+
+    useEffect(() => {
+        checkIfWalletConnected();
+    },[]);
+
+    //-----Connect Wallet
+    const connectWallet = async () => {
+        try{
+            if(!window.ethereum) return setOpenError(true),setError("Install Metamask");
+            const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+            setCurrentAccount(accounts[0]);
+        } catch(error) {
+            console.log("Error connecting to metamask",error);
+        }
+    }
+
+    return(
+        <CrowdFundingContext.Provider value={{titleData,connectWallet,currentAccount,createCampaign,getCampaigns,getUserCampaigns,donate,getDonations}}>
+            {children}
+        </CrowdFundingContext.Provider>
+    ) 
 }
