@@ -148,7 +148,7 @@ export const CrowdFundingProvider = ({children}) => {
     }
 
     return(
-        <CrowdFundingContext.Provider value={{titleData,connectWallet,currentAccount,createCampaign,getCampaigns,getUserCampaigns,donate,getDonations}}>
+        <CrowdFundingContext.Provider value={{titleData,currentAccount,createCampaign,getCampaigns,getUserCampaigns,donate,getDonations , connectWallet}}>
             {children}
         </CrowdFundingContext.Provider>
     ) 

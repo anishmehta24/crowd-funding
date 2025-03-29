@@ -1,5 +1,5 @@
 import Footer from "./Footer";
-import Header from "./Header";
-import Menu from "./Menu";
 
-export { Footer, Header };
+import Menu from "./Menu";
+import Logo from "./Logo";
+export { Footer , Menu ,Logo };
